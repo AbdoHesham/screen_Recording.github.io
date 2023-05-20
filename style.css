@@ -1,0 +1,89 @@
+/* body {
+    background-color: #f2f2f2;
+    font-family: Arial, sans-serif;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  video {
+    display: block;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: default;
+  }
+  
+  button:hover {
+    background-color: #3e8e41;
+  } */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+    margin-top: 50px;
+  }
+
+  video {
+    display: block;
+    margin: 0 auto;
+    border: 2px solid #333;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #555;
+  }
+
+  button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: default;
+  }
+
+  #downloadButton {
+    background-color: #4CAF50;
+  }
+
+  #downloadButton:hover {
+    background-color: #3e8e41;
+  }
