@@ -23,17 +23,10 @@
       <p>Capture your screen with ease and high quality. Perfect for tutorials, presentations, and more!</p>
       <button id="startButton">Start Recording</button>
       <button id="stopButton" disabled>Stop Recording</button>
+      <button id="pauseButton" disabled>Pause Recording</button>
+      <button id="resumeButton" disabled>Resume Recording</button>
       <button id="downloadButton" onclick="download()" disabled>Download Video</button>
-      <!-- <div id="controlBar">
-        <label>
-          <input type="checkbox" id="systemSound" checked>
-          System Sound
-        </label>
-        <label>
-          <input type="checkbox" id="micSound" checked>
-          Mic Sound
-        </label>
-      </div> -->
+      <!-- <button id="downloadWordButton" onclick="downloadWord()" disabled>Download Word</button> -->
       <video id="recordedVideo" style="display: none;"></video>
     </div>
   </section>
@@ -92,6 +85,11 @@
   <footer>
     <p>&copy; 2024 Screen Recorder. All rights reserved.</p>
   </footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.4/pizzip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.23.1/docxtemplater.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
 
   <script src="script.js"></script>
 </body>
