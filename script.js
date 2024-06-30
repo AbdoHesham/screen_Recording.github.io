@@ -20,8 +20,8 @@ startButton.addEventListener("click", () => {
 
   navigator.mediaDevices.getDisplayMedia(displayOptions)
     .then(function(screenStream) {
-      if (Object.keys(audioOptions).length !== 0) {
-        navigator.mediaDevices.getUserMedia(audioOptions)
+      // if (Object.keys(audioOptions).length !== 0) {
+        navigator.mediaDevices.getUserMedia({ audio: { mediaSource: 'system' } })
           .then(function(audioStream) {
             const combinedStream = new MediaStream([...screenStream.getTracks(), ...audioStream.getTracks()]);
             setupMediaRecorder(combinedStream);
@@ -29,9 +29,9 @@ startButton.addEventListener("click", () => {
           .catch(function(err) {
             console.log('Microphone access failed: ' + err);
           });
-      } else {
-        setupMediaRecorder(screenStream);
-      }
+      // } else {
+      //   setupMediaRecorder(screenStream);
+      // }
     })
     .catch(function(err) {
       console.log('Screen access failed: ' + err);
