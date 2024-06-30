@@ -1,40 +1,98 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Screen Recorder</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
-  </head>
-  <body>
-    <h1>Screen Recorder</h1>
-    <!-- <video id="video" width="640" height="480" autoplay></video> -->
-    <button id="startButton">Start Recording</button>
-    <button id="stopButton" disabled>Stop Recording</button>
-    <button id="downloadButton" onclick="download()" disabled>
-      Download Video
-    </button>
-    <script src="script.js"></script>
-    <!-- <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6254867054962740"
-      crossorigin="anonymous"
-    ></script> -->
-    <div class="ads">
-        <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
-        <script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6254867054962740"
-        crossorigin="anonymous"
-      ></script>
-        <!-- Your AdSense Ad Unit Code -->
-        <!-- <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="YOUR-AD-CLIENT-ID"
-             data-ad-slot="YOUR-AD-SLOT-ID"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins> -->
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screen Recorder</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Screen Recorder</h1>
+      <p>Capture your screen with ease and high quality. Perfect for tutorials, presentations, and more!</p>
+      <button id="startButton">Start Recording</button>
+      <button id="stopButton" disabled>Stop Recording</button>
+      <button id="downloadButton" onclick="download()" disabled>Download Video</button>
+      <!-- <div id="controlBar">
+        <label>
+          <input type="checkbox" id="systemSound" checked>
+          System Sound
+        </label>
+        <label>
+          <input type="checkbox" id="micSound" checked>
+          Mic Sound
+        </label>
+      </div> -->
+      <video id="recordedVideo" style="display: none;"></video>
+    </div>
+  </section>
+
+  <section id="features" class="section">
+    <h2>Features</h2>
+    <div class="features-list">
+      <div class="feature-item">
+        <h3>High-quality video recording</h3>
+        <p>Record videos in full HD with crystal-clear audio.</p>
       </div>
-  </body>
+      <div class="feature-item">
+        <h3>Audio recording with noise suppression</h3>
+        <p>Capture audio clearly with advanced noise suppression.</p>
+      </div>
+      <div class="feature-item">
+        <h3>Easy to use interface</h3>
+        <p>Intuitive interface that anyone can use without hassle.</p>
+      </div>
+      <div class="feature-item">
+        <h3>Free and secure</h3>
+        <p>Enjoy unlimited recordings without any cost.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-it-works" class="section">
+    <h2>How It Works</h2>
+    <div class="how-it-works-steps">
+      <div class="step-item">
+        <h3>Step 1</h3>
+        <p>Click "Start Recording" to begin capturing your screen.</p>
+      </div>
+      <div class="step-item">
+        <h3>Step 2</h3>
+        <p>Click "Stop Recording" when you're done.</p>
+      </div>
+      <div class="step-item">
+        <h3>Step 3</h3>
+        <p>Download your video and share it with others!</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section">
+    <h2>Contact Us</h2>
+    <p>Have questions? Get in touch with us!</p>
+    <form>
+      <input type="text" placeholder="Your Name" required>
+      <input type="email" placeholder="Your Email" required>
+      <textarea placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>&copy; 2024 Screen Recorder. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
 </html>
