@@ -10,63 +10,51 @@ const downloadButton = document.getElementById("downloadButton");
 const downloadWordButton = document.getElementById("downloadWordButton");
 const video = document.getElementById("recordedVideo");
 let audioStream = null;
+let audioStreamRequested = false;
 
-if ('webkitSpeechRecognition' in window) {
-  const recognition = new webkitSpeechRecognition();
-  recognition.continuous = true;
-  recognition.interimResults = true;
+let recognization = new webkitSpeechRecognition();
+recognization.continuous = true;
+recognization.interimResults = true;
 
-  recognition.onstart = function() {
-    recognizing = true;
-  };
-
-  recognition.onend = function() {
-    recognizing = false;
-  };
-
-  recognition.onresult = function(event) {
-    let interim_transcript = '';
-    for (let i = event.resultIndex; i < event.results.length; ++i) {
-      if (event.results[i].isFinal) {
-        transcribedText += event.results[i][0].transcript;
-      } else {
-        interim_transcript += event.results[i][0].transcript;
-      }
+recognization.onresult = (event) => {
+  let interim_transcript = '';
+  for (let i = event.resultIndex; i < event.results.length; ++i) {
+    if (event.results[i].isFinal) {
+      transcribedText += event.results[i][0].transcript;
+    } else {
+      interim_transcript += event.results[i][0].transcript;
     }
-  };
+  }
+  document.getElementById("output").innerHTML = transcribedText + '<br>' + interim_transcript;
+};
 
-  startButton.addEventListener("click", () => {
-    recognition.start();
-  });
-
-  stopButton.addEventListener("click", () => {
-    recognition.stop();
-  });
+async function getAudioStream() {
+  if (!audioStreamRequested) {
+    audioStreamRequested = true;
+    try {
+      audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (err) {
+      console.log('Microphone access failed: ' + err);
+      audioStreamRequested = false;
+    }
+  }
+  return audioStream;
 }
 
-startButton.addEventListener("click", () => {
+startButton.addEventListener("click", async () => {
   const displayOptions = { video: true };
 
-  navigator.mediaDevices.getDisplayMedia(displayOptions)
-    .then(function(screenStream) {
-      if (!audioStream) {
-        navigator.mediaDevices.getUserMedia({ audio: true })
-          .then(function(stream) {
-            audioStream = stream;
-            const combinedStream = new MediaStream([...screenStream.getTracks(), ...audioStream.getTracks()]);
-            setupMediaRecorder(combinedStream);
-          })
-          .catch(function(err) {
-            console.log('Microphone access failed: ' + err);
-          });
-      } else {
-        const combinedStream = new MediaStream([...screenStream.getTracks(), ...audioStream.getTracks()]);
-        setupMediaRecorder(combinedStream);
-      }
-    })
-    .catch(function(err) {
-      console.log('Screen access failed: ' + err);
-    });
+  try {
+    const screenStream = await navigator.mediaDevices.getDisplayMedia(displayOptions);
+    const audioStream = await getAudioStream();
+    const combinedStream = audioStream ? new MediaStream([...screenStream.getTracks(), ...audioStream.getTracks()]) : screenStream;
+    setupMediaRecorder(combinedStream);
+    const language = document.getElementById("languageSelect").value;
+    recognization.lang = language;
+    recognization.start();
+  } catch (err) {
+    console.log('Screen or audio access failed: ' + err);
+  }
 });
 
 function setupMediaRecorder(stream) {
@@ -96,6 +84,8 @@ function setupMediaRecorder(stream) {
 
 stopButton.addEventListener("click", () => {
   mediaRecorder.stop();
+  recognization.stop();
+
   startButton.disabled = false;
   stopButton.disabled = true;
   pauseButton.disabled = true;
@@ -132,45 +122,19 @@ function download() {
 }
 
 function downloadWord() {
-  const PizZip = window.pizzip;
-  const Docxtemplater = window.docxtemplater;
-
-  // Create a new PizZip instance
-  const zip = new PizZip();
-
-  // Define the template content
-  const content = `
-    <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-      <w:body>
-        <w:p>
-          <w:r>
-            <w:t>{transcribedText}</w:t>
-          </w:r>
-        </w:p>
-      </w:body>
-    </w:document>
-  `;
-
-  // Load the template into PizZip
-  zip.file("word/document.xml", content);
-
-  // Create a new Docxtemplater instance
-  const doc = new Docxtemplater(zip, {
-    paragraphLoop: true,
-    linebreaks: true,
-  });
-
-  // Set the data for the template
-  doc.setData({ transcribedText });
-
-  try {
-    doc.render();
-  } catch (error) {
-    console.error(JSON.stringify({ error }, null, 2));
-    throw error;
-  }
-
-  // Generate the document as a blob
-  const out = doc.getZip().generate({ type: "blob" });
-  saveAs(out, "transcribed.docx");
+  const content = `<!DOCTYPE html>
+    <html>
+      <body>
+        <p>${transcribedText}</p>
+      </body>
+    </html>`;
+  const blob = new Blob([content], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  document.body.appendChild(a);
+  a.style = "display: none";
+  a.href = url;
+  a.download = "transcribed.doc";
+  a.click();
+  window.URL.revokeObjectURL(url);
 }

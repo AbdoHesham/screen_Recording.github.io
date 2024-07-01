@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Screen Recorder</title>
   <link rel="stylesheet" type="text/css" href="style.css">
+  <!-- Include FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
   <header>
@@ -21,12 +23,30 @@
     <div class="hero-content">
       <h1>Screen Recorder</h1>
       <p>Capture your screen with ease and high quality. Perfect for tutorials, presentations, and more!</p>
-      <button id="startButton">Start Recording</button>
-      <button id="stopButton" disabled>Stop Recording</button>
-      <button id="pauseButton" disabled>Pause Recording</button>
-      <button id="resumeButton" disabled>Resume Recording</button>
-      <button id="downloadButton" onclick="download()" disabled>Download Video</button>
-      <!-- <button id="downloadWordButton" onclick="downloadWord()" disabled>Download Word</button> -->
+      <!-- Language Select Dropdown -->
+      <div class="language-select">
+        <label for="languageSelect">Choose Language: </label>
+        <select id="languageSelect">
+          <option value="en-US">English (US)</option>
+          <option value="ar-SA">Arabic (Saudi Arabia)</option>
+          <option value="es-ES">Spanish (Spain)</option>
+          <option value="fr-FR">French (France)</option>
+          <!-- Add more languages as needed -->
+        </select>
+      </div>
+
+      <!-- Control Buttons with Icons -->
+      <div class="control-buttons">
+        <button id="startButton"><i class="fas fa-play"></i> Start </button>
+        <button id="stopButton" disabled><i class="fas fa-stop"></i> Stop </button>
+        <button id="pauseButton" disabled><i class="fas fa-pause"></i> Pause </button>
+        <button id="resumeButton" disabled><i class="fas fa-play"></i> Resume </button>
+        <button id="downloadButton" onclick="download()" disabled><i class="fas fa-download"></i> Download Video</button>
+        <button id="downloadWordButton" onclick="downloadWord()" disabled><i class="fas fa-file-word"></i> Download Word</button>
+      </div>
+      
+      <h3 id="output" class="hide"></h3>
+      <p id="action" style="color: grey; font-weight: 800; padding: 0; padding-left: 2rem;"></p>
       <video id="recordedVideo" style="display: none;"></video>
     </div>
   </section>
@@ -85,12 +105,6 @@
   <footer>
     <p>&copy; 2024 Screen Recorder. All rights reserved.</p>
   </footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.4/pizzip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.23.1/docxtemplater.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
-
   <script src="script.js"></script>
 </body>
 </html>
