@@ -3,108 +3,366 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Screen Recorder</title>
+  <title>ProScreen Recorder - Professional Screen & Voice Recording</title>
   <link rel="stylesheet" type="text/css" href="style.css">
-  <!-- Include FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <nav>
-      <ul>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <i class="fas fa-video"></i>
+        <span>ProScreen</span>
+      </div>
+      <ul class="nav-menu">
         <li><a href="#features">Features</a></li>
         <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
-    </nav>
-  </header>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
 
+  <!-- Hero Section -->
   <section class="hero">
+    <div class="hero-background">
+      <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+      </div>
+    </div>
     <div class="hero-content">
-      <h1>Screen Recorder</h1>
-      <p>Capture your screen with ease and high quality. Perfect for tutorials, presentations, and more!</p>
-      <!-- Language Select Dropdown -->
-      <div class="language-select">
-        <label for="languageSelect">Choose Language: </label>
-        <select id="languageSelect">
+      <div class="hero-text">
+        <h1 class="hero-title">
+          <span class="gradient-text">Professional</span> Screen Recording
+        </h1>
+        <p class="hero-subtitle">Capture your screen and voice with crystal-clear quality. Perfect for tutorials, presentations, and content creation.</p>
+        <div class="hero-stats">
+          <div class="stat">
+            <i class="fas fa-users"></i>
+            <span>10K+ Users</span>
+          </div>
+          <div class="stat">
+            <i class="fas fa-star"></i>
+            <span>4.9/5 Rating</span>
+          </div>
+          <div class="stat">
+            <i class="fas fa-download"></i>
+            <span>Free Forever</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="screen-preview">
+          <div class="screen-header">
+            <div class="screen-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <div class="screen-content">
+            <div class="mock-app">
+              <div class="mock-toolbar"></div>
+              <div class="mock-content">
+                <div class="mock-element"></div>
+                <div class="mock-element"></div>
+                <div class="mock-element"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recording Modes Section -->
+  <section class="recording-modes">
+    <div class="container">
+      <h2>Choose Your Recording Mode</h2>
+      <div class="modes-grid">
+        <div class="mode-card" data-mode="screen">
+          <div class="mode-icon">
+            <i class="fas fa-desktop"></i>
+          </div>
+          <h3>Screen Recording</h3>
+          <p>Record your entire screen or specific applications with audio</p>
+          <div class="mode-features">
+            <span><i class="fas fa-check"></i> Full HD Quality</span>
+            <span><i class="fas fa-check"></i> System Audio</span>
+            <span><i class="fas fa-check"></i> Microphone Audio</span>
+          </div>
+        </div>
+        <div class="mode-card" data-mode="voice">
+          <div class="mode-icon">
+            <i class="fas fa-microphone"></i>
+          </div>
+          <h3>Voice Recording</h3>
+          <p>Record high-quality audio with noise suppression</p>
+          <div class="mode-features">
+            <span><i class="fas fa-check"></i> Noise Suppression</span>
+            <span><i class="fas fa-check"></i> Real-time Transcription</span>
+            <span><i class="fas fa-check"></i> Multiple Formats</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features">
+    <div class="container">
+      <h2>Powerful Features</h2>
+      <div class="features-grid">
+        <div class="feature-card" data-aos="fade-up">
+          <div class="feature-icon">
+            <i class="fas fa-cog"></i>
+          </div>
+          <h3>Advanced Settings</h3>
+          <p>Customize quality, frame rate, and audio settings for perfect recordings</p>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="feature-icon">
+            <i class="fas fa-closed-captioning"></i>
+          </div>
+          <h3>Auto Transcription</h3>
+          <p>Get real-time transcription in multiple languages with high accuracy</p>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Privacy First</h3>
+          <p>Your recordings stay on your device. No uploads, no cloud storage</p>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+          <div class="feature-icon">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3>Lightning Fast</h3>
+          <p>Optimized for performance with minimal system impact</p>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+          <div class="feature-icon">
+            <i class="fas fa-download"></i>
+          </div>
+          <h3>Multiple Formats</h3>
+          <p>Export to MP4, WebM, or download transcriptions as Word documents</p>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+          <div class="feature-icon">
+            <i class="fas fa-palette"></i>
+          </div>
+          <h3>Custom Branding</h3>
+          <p>Add your logo, watermarks, and custom overlays to recordings</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="how-it-works">
+    <div class="container">
+      <h2>How It Works</h2>
+      <div class="steps">
+        <div class="step" data-aos="fade-right">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Choose Mode</h3>
+            <p>Select between screen recording or voice recording mode</p>
+          </div>
+        </div>
+        <div class="step" data-aos="fade-left">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Configure Settings</h3>
+            <p>Set audio source, quality, and language preferences</p>
+          </div>
+        </div>
+        <div class="step" data-aos="fade-right">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Start Recording</h3>
+            <p>Click start and begin capturing your content</p>
+          </div>
+        </div>
+        <div class="step" data-aos="fade-left">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3>Download & Share</h3>
+            <p>Download your recording and share with others</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fixed Control Panel -->
+  <div class="control-panel" id="controlPanel">
+    <div class="control-container">
+      <!-- Recording Mode Selection -->
+      <div class="mode-selector">
+        <button class="mode-btn active" data-mode="screen">
+          <i class="fas fa-desktop"></i>
+          <span>Screen</span>
+        </button>
+        <button class="mode-btn" data-mode="voice">
+          <i class="fas fa-microphone"></i>
+          <span>Voice</span>
+        </button>
+      </div>
+
+      <!-- Audio Source Selection -->
+      <div class="audio-selector">
+        <select id="audioSource" class="audio-select">
+          <option value="system">System Audio</option>
+          <option value="microphone">Microphone</option>
+          <option value="both">Both</option>
+        </select>
+      </div>
+
+      <!-- Language Selection -->
+      <div class="language-selector">
+        <select id="languageSelect" class="language-select">
           <option value="en-US">English (US)</option>
           <option value="ar-SA">Arabic (Saudi Arabia)</option>
           <option value="es-ES">Spanish (Spain)</option>
           <option value="fr-FR">French (France)</option>
-          <!-- Add more languages as needed -->
+          <option value="de-DE">German (Germany)</option>
+          <option value="it-IT">Italian (Italy)</option>
+          <option value="pt-BR">Portuguese (Brazil)</option>
+          <option value="ru-RU">Russian (Russia)</option>
+          <option value="ja-JP">Japanese (Japan)</option>
+          <option value="ko-KR">Korean (Korea)</option>
+          <option value="zh-CN">Chinese (Simplified)</option>
         </select>
       </div>
 
-      <!-- Control Buttons with Icons -->
+      <!-- Control Buttons -->
       <div class="control-buttons">
-        <button id="startButton"><i class="fas fa-play"></i> Start </button>
-        <button id="stopButton" disabled><i class="fas fa-stop"></i> Stop </button>
-        <button id="pauseButton" disabled><i class="fas fa-pause"></i> Pause </button>
-        <button id="resumeButton" disabled><i class="fas fa-play"></i> Resume </button>
-        <button id="downloadButton" onclick="download()" disabled><i class="fas fa-download"></i> Download Video</button>
-        <button id="downloadWordButton" onclick="downloadWord()" disabled><i class="fas fa-file-word"></i> Download Word</button>
+        <button id="startButton" class="control-btn start-btn">
+          <i class="fas fa-play"></i>
+          <span>Start</span>
+        </button>
+        <button id="stopButton" class="control-btn stop-btn" disabled>
+          <i class="fas fa-stop"></i>
+          <span>Stop</span>
+        </button>
+        <button id="pauseButton" class="control-btn pause-btn" disabled>
+          <i class="fas fa-pause"></i>
+          <span>Pause</span>
+        </button>
+        <button id="resumeButton" class="control-btn resume-btn" disabled>
+          <i class="fas fa-play"></i>
+          <span>Resume</span>
+        </button>
       </div>
-      
-      <h3 id="output" class="hide"></h3>
-      <p id="action" style="color: grey; font-weight: 800; padding: 0; padding-left: 2rem;"></p>
-      <video id="recordedVideo" style="display: none;"></video>
+
+      <!-- Download Buttons -->
+      <div class="download-buttons">
+        <button id="downloadButton" class="download-btn video-btn" disabled>
+          <i class="fas fa-download"></i>
+          <span>Download</span>
+        </button>
+        <button id="downloadWordButton" class="download-btn word-btn" disabled>
+          <i class="fas fa-file-word"></i>
+          <span>Transcript</span>
+        </button>
+      </div>
+
+      <!-- Recording Status -->
+      <div class="recording-status">
+        <div class="status-indicator" id="statusIndicator">
+          <div class="pulse"></div>
+        </div>
+        <span id="recordingTime">00:00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recording Output -->
+  <div class="recording-output" id="recordingOutput">
+    <div class="output-container">
+      <h3 id="output" class="transcription-output"></h3>
+      <p id="action" class="action-text"></p>
+      <video id="recordedVideo" class="recorded-video" controls style="display: none;"></video>
+    </div>
+  </div>
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact">
+    <div class="container">
+      <h2>Get In Touch</h2>
+      <p>Have questions or suggestions? We'd love to hear from you!</p>
+      <form class="contact-form">
+        <div class="form-group">
+          <input type="text" placeholder="Your Name" required>
+        </div>
+        <div class="form-group">
+          <input type="email" placeholder="Your Email" required>
+        </div>
+        <div class="form-group">
+          <textarea placeholder="Your Message" required></textarea>
+        </div>
+        <button type="submit" class="submit-btn">
+          <i class="fas fa-paper-plane"></i>
+          Send Message
+        </button>
+      </form>
     </div>
   </section>
 
-  <section id="features" class="section">
-    <h2>Features</h2>
-    <div class="features-list">
-      <div class="feature-item">
-        <h3>High-quality video recording</h3>
-        <p>Record videos in full HD with crystal-clear audio.</p>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <div class="footer-logo">
+            <i class="fas fa-video"></i>
+            <span>ProScreen</span>
+          </div>
+          <p>Professional screen recording made simple and powerful.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Connect</h4>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
       </div>
-      <div class="feature-item">
-        <h3>Audio recording with noise suppression</h3>
-        <p>Capture audio clearly with advanced noise suppression.</p>
-      </div>
-      <div class="feature-item">
-        <h3>Easy to use interface</h3>
-        <p>Intuitive interface that anyone can use without hassle.</p>
-      </div>
-      <div class="feature-item">
-        <h3>Free and secure</h3>
-        <p>Enjoy unlimited recordings without any cost.</p>
+      <div class="footer-bottom">
+        <p>&copy; 2024 ProScreen Recorder. All rights reserved.</p>
       </div>
     </div>
-  </section>
-
-  <section id="how-it-works" class="section">
-    <h2>How It Works</h2>
-    <div class="how-it-works-steps">
-      <div class="step-item">
-        <h3>Step 1</h3>
-        <p>Click "Start Recording" to begin capturing your screen.</p>
-      </div>
-      <div class="step-item">
-        <h3>Step 2</h3>
-        <p>Click "Stop Recording" when you're done.</p>
-      </div>
-      <div class="step-item">
-        <h3>Step 3</h3>
-        <p>Download your video and share it with others!</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact" class="section">
-    <h2>Contact Us</h2>
-    <p>Have questions? Get in touch with us!</p>
-    <form>
-      <input type="text" placeholder="Your Name" required>
-      <input type="email" placeholder="Your Email" required>
-      <textarea placeholder="Your Message" required></textarea>
-      <button type="submit">Send Message</button>
-    </form>
-  </section>
-
-  <footer>
-    <p>&copy; 2024 Screen Recorder. All rights reserved.</p>
   </footer>
+
   <script src="script.js"></script>
 </body>
 </html>
