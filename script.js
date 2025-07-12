@@ -35,18 +35,18 @@ recognition.interimResults = true;
 // IndexedDB setup
 function initDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('ProScreenDB', 1);
-    
+    const request = indexedDB.open("ProScreenDB", 1);
+
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
-    
+
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
-      
+
       // Create recordings store
-      if (!db.objectStoreNames.contains('recordings')) {
-        const store = db.createObjectStore('recordings', { keyPath: 'id' });
-        store.createIndex('date', 'date', { unique: false });
+      if (!db.objectStoreNames.contains("recordings")) {
+        const store = db.createObjectStore("recordings", { keyPath: "id" });
+        store.createIndex("date", "date", { unique: false });
       }
     };
   });
@@ -61,8 +61,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     showControlPanel();
     createRecordingHistorySection();
   } catch (error) {
-    console.error('Failed to initialize database:', error);
-    showNotification('Failed to initialize storage. Please refresh the page.', 'error');
+    console.error("Failed to initialize database:", error);
+    showNotification(
+      "Failed to initialize storage. Please refresh the page.",
+      "error"
+    );
   }
 });
 
@@ -370,19 +373,19 @@ function setupMediaRecorder(stream) {
     const blob = new Blob(recordedChunks, {
       type: currentRecordingMode === "screen" ? "video/webm" : "audio/webm",
     });
-    
+
     if (currentRecordingMode === "screen") {
       const url = URL.createObjectURL(blob);
       video.src = url;
       video.controls = true;
       video.style.display = "block";
     }
-    
+
     downloadButton.disabled = false;
     downloadWordButton.disabled = false;
-    
+
     saveToHistory(blob);
-    
+
     updateActionText("Recording completed! You can now download your file.");
   };
 
@@ -584,6 +587,8 @@ function downloadWord() {
 }
 
 function handleContactSubmit(e) {
+  console.log(e.target);
+
   e.preventDefault();
 
   const formData = new FormData(e.target);
@@ -591,19 +596,24 @@ function handleContactSubmit(e) {
   const email = e.target.querySelector('input[type="email"]').value;
   const message = e.target.querySelector("textarea").value;
 
-  console.log("Contact form submitted:", { name, email, message });
+  emailjs.sendForm("service_omovq6r", "template_k1betr8", e.target).then(
+    (response) => {
+      const submitBtn = e.target.querySelector(".submit-btn");
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
+      submitBtn.style.background = "#10b981";
 
-  const submitBtn = e.target.querySelector(".submit-btn");
-  const originalText = submitBtn.innerHTML;
-  submitBtn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
-  submitBtn.style.background = "#10b981";
+      e.target.reset();
 
-  e.target.reset();
-
-  setTimeout(() => {
-    submitBtn.innerHTML = originalText;
-    submitBtn.style.background = "";
-  }, 3000);
+      setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.style.background = "";
+      }, 3000);
+    },
+    (error) => {
+      console.log("FAILED...", error);
+    }
+  );
 }
 
 function showControlPanel() {
@@ -664,57 +674,57 @@ async function saveToHistory(blob) {
     time: new Date().toLocaleTimeString(),
     transcription: transcribedText,
     blob: blob,
-    mimeType: blob.type
+    mimeType: blob.type,
   };
-  
+
   try {
-    const transaction = db.transaction(['recordings'], 'readwrite');
-    const store = transaction.objectStore('recordings');
+    const transaction = db.transaction(["recordings"], "readwrite");
+    const store = transaction.objectStore("recordings");
     await store.add(recording);
-    
+
     recordingHistory.unshift(recording);
-    
+
     if (recordingHistory.length > 20) {
       const oldestRecording = recordingHistory.pop();
       await store.delete(oldestRecording.id);
     }
-    
+
     loadRecordingHistory();
-    showNotification('Recording saved successfully!', 'success');
+    showNotification("Recording saved successfully!", "success");
   } catch (error) {
-    console.error('Failed to save recording:', error);
-    showNotification('Failed to save recording.', 'error');
+    console.error("Failed to save recording:", error);
+    showNotification("Failed to save recording.", "error");
   }
 }
 
 async function loadRecordingHistory() {
   try {
-    const transaction = db.transaction(['recordings'], 'readonly');
-    const store = transaction.objectStore('recordings');
-    const index = store.index('date');
-    
+    const transaction = db.transaction(["recordings"], "readonly");
+    const store = transaction.objectStore("recordings");
+    const index = store.index("date");
+
     const request = index.getAll();
-    
+
     request.onsuccess = () => {
       recordingHistory = request.result.sort((a, b) => b.id - a.id);
       displayRecordingHistory();
     };
-    
+
     request.onerror = () => {
-      console.error('Failed to load recordings:', request.error);
-      showNotification('Failed to load recordings.', 'error');
+      console.error("Failed to load recordings:", request.error);
+      showNotification("Failed to load recordings.", "error");
     };
   } catch (error) {
-    console.error('Failed to load recordings:', error);
-    showNotification('Failed to load recordings.', 'error');
+    console.error("Failed to load recordings:", error);
+    showNotification("Failed to load recordings.", "error");
   }
 }
 
 function displayRecordingHistory() {
   const historyGrid = document.getElementById("historyGrid");
-  
+
   if (!historyGrid) return;
-  
+
   if (recordingHistory.length === 0) {
     historyGrid.innerHTML = `
       <div class="no-recordings">
@@ -724,7 +734,7 @@ function displayRecordingHistory() {
     `;
     return;
   }
-  
+
   historyGrid.innerHTML = recordingHistory
     .map(
       (recording) => `
@@ -738,9 +748,7 @@ function displayRecordingHistory() {
             <div class="history-item-info">
               <h3>${recording.name}</h3>
               <p>${recording.date} at ${recording.time}</p>
-              <p>Duration: ${recording.duration} | Size: ${
-        recording.size
-      }</p>
+              <p>Duration: ${recording.duration} | Size: ${recording.size}</p>
             </div>
           </div>
           <div class="history-item-actions">
@@ -766,8 +774,8 @@ function displayRecordingHistory() {
             <div class="history-item-transcription">
               <h4>Transcription:</h4>
               <p>${recording.transcription.substring(0, 100)}${
-                recording.transcription.length > 100 ? "..." : ""
-              }</p>
+                  recording.transcription.length > 100 ? "..." : ""
+                }</p>
             </div>
           `
               : ""
@@ -780,43 +788,43 @@ function displayRecordingHistory() {
 
 async function playRecording(id) {
   try {
-    const transaction = db.transaction(['recordings'], 'readonly');
-    const store = transaction.objectStore('recordings');
+    const transaction = db.transaction(["recordings"], "readonly");
+    const store = transaction.objectStore("recordings");
     const request = store.get(id);
-    
+
     request.onsuccess = () => {
       const recording = request.result;
       if (recording && recording.blob) {
         const video = document.getElementById("recordedVideo");
         const url = URL.createObjectURL(recording.blob);
-        
+
         video.src = url;
         video.controls = true;
         video.style.display = "block";
         video.scrollIntoView({ behavior: "smooth" });
-        
+
         video.onended = () => {
           URL.revokeObjectURL(url);
         };
       }
     };
   } catch (error) {
-    console.error('Failed to play recording:', error);
-    showNotification('Failed to play recording.', 'error');
+    console.error("Failed to play recording:", error);
+    showNotification("Failed to play recording.", "error");
   }
 }
 
 async function downloadFromHistory(id) {
   try {
-    const transaction = db.transaction(['recordings'], 'readonly');
-    const store = transaction.objectStore('recordings');
+    const transaction = db.transaction(["recordings"], "readonly");
+    const store = transaction.objectStore("recordings");
     const request = store.get(id);
-    
+
     request.onsuccess = () => {
       const recording = request.result;
       if (recording && recording.blob) {
         const url = URL.createObjectURL(recording.blob);
-        
+
         const a = document.createElement("a");
         document.body.appendChild(a);
         a.style = "display: none";
@@ -828,23 +836,23 @@ async function downloadFromHistory(id) {
       }
     };
   } catch (error) {
-    console.error('Failed to download recording:', error);
-    showNotification('Failed to download recording.', 'error');
+    console.error("Failed to download recording:", error);
+    showNotification("Failed to download recording.", "error");
   }
 }
 
 async function deleteFromHistory(id) {
   try {
-    const transaction = db.transaction(['recordings'], 'readwrite');
-    const store = transaction.objectStore('recordings');
+    const transaction = db.transaction(["recordings"], "readwrite");
+    const store = transaction.objectStore("recordings");
     await store.delete(id);
-    
+
     recordingHistory = recordingHistory.filter((r) => r.id !== id);
     displayRecordingHistory();
     showNotification("Recording deleted successfully.", "success");
   } catch (error) {
-    console.error('Failed to delete recording:', error);
-    showNotification('Failed to delete recording.', 'error');
+    console.error("Failed to delete recording:", error);
+    showNotification("Failed to delete recording.", "error");
   }
 }
 
