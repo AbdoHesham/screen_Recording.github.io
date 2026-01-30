@@ -1,0 +1,24 @@
+{
+  "name": "screen_recording.github.io",
+  "version": "1.0.0",
+  "description": "A modern, professional web-based screen and voice recording application with advanced features, beautiful animations, and an intuitive user interface.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbdoHesham/screen_Recording.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AbdoHesham/screen_Recording.github.io/issues"
+  },
+  "homepage": "https://github.com/AbdoHesham/screen_Recording.github.io#readme",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.72.1"
+  }
+}
