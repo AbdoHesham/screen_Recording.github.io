@@ -1,8 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const { authenticateToken } = require('../middleware/authMiddleware');
-const s3Service = require('../utils/s3Service');
 const { query } = require('../db/connection');
+
+// Use mock storage if AWS credentials are not configured
+const AWS_CONFIGURED = process.env.AWS_ACCESS_KEY_ID &&
+                       process.env.AWS_ACCESS_KEY_ID !== 'your_aws_access_key' &&
+                       process.env.AWS_SECRET_ACCESS_KEY &&
+                       process.env.AWS_SECRET_ACCESS_KEY !== 'your_aws_secret_key';
+
+const s3Service = AWS_CONFIGURED
+  ? require('../utils/s3Service')
+  : require('../utils/mockStorageService');
+
+if (!AWS_CONFIGURED) {
+  console.log('⚠️  AWS S3 not configured - using mock storage for development');
+  console.log('   Recordings will be saved to database but files won\'t be uploaded to cloud');
+  console.log('   To enable S3: Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in .env');
+}
 
 /**
  * POST /api/recordings/presigned-url

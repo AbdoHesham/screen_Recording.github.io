@@ -6,7 +6,11 @@
       "Bash(copy .env.example .env)",
       "Bash(node src/db/migrate.js:*)",
       "Bash(npm run dev:*)",
-      "Bash(timeout 5 tail:*)"
+      "Bash(timeout 5 tail:*)",
+      "Bash(node test-db.js:*)",
+      "Bash(npm run migrate:*)",
+      "Bash(node verify-seed-data.js:*)",
+      "Bash(curl:*)"
     ]
   }
 }

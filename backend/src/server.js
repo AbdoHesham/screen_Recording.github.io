@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
 const recordingRoutes = require('./routes/recordingRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const { pool } = require('./db/connection');
 
 // Initialize Express app
@@ -51,6 +52,7 @@ app.get('/health', async (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/recordings', recordingRoutes);
+app.use('/api/admin', adminRoutes);
 
 // TODO: Add more routes as we build them
 // app.use('/api/payment', paymentRoutes);
@@ -103,12 +105,13 @@ app.listen(PORT, () => {
 ║   - POST /api/auth/register                   ║
 ║   - POST /api/auth/login                      ║
 ║   - GET  /api/auth/me                         ║
-║   - GET  /api/auth/credits                    ║
 ║   Recordings:                                 ║
 ║   - POST /api/recordings/presigned-url        ║
 ║   - GET  /api/recordings                      ║
-║   - POST /api/recordings                      ║
-║   - GET  /api/recordings/:id                  ║
+║   Admin: (requires admin role)                ║
+║   - GET  /api/admin/stats                     ║
+║   - GET  /api/admin/users                     ║
+║   - POST /api/admin/users                     ║
 ║                                               ║
 ╚═══════════════════════════════════════════════╝
   `);

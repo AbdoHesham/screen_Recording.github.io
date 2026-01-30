@@ -104,6 +104,56 @@ class APIClient {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   }
+
+  // Admin endpoints
+  async getAdminStats() {
+    return this.request('/api/admin/stats', {}, true);
+  }
+
+  async getAdminUsers(limit: number = 50, offset: number = 0, search: string = '', role: string = '') {
+    const params = new URLSearchParams({
+      limit: limit.toString(),
+      offset: offset.toString(),
+      ...(search && { search }),
+      ...(role && { role })
+    });
+    return this.request(`/api/admin/users?${params}`, {}, true);
+  }
+
+  async createAdminUser(data: { email: string; password: string; fullName: string; role?: string; creditsBalance?: number }) {
+    return this.request('/api/admin/users', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }, true);
+  }
+
+  async updateAdminUser(id: string, data: { role?: string; creditsBalance?: number; emailVerified?: boolean }) {
+    return this.request(`/api/admin/users/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }, true);
+  }
+
+  async grantCredits(userId: string, amount: number, description?: string) {
+    return this.request(`/api/admin/users/${userId}/credits`, {
+      method: 'POST',
+      body: JSON.stringify({ amount, description }),
+    }, true);
+  }
+
+  async deleteAdminUser(id: string) {
+    return this.request(`/api/admin/users/${id}`, {
+      method: 'DELETE',
+    }, true);
+  }
+
+  async getRevenue() {
+    return this.request('/api/admin/revenue', {}, true);
+  }
+
+  async getActivity(limit: number = 50) {
+    return this.request(`/api/admin/activity?limit=${limit}`, {}, true);
+  }
 }
 
 export const apiClient = new APIClient();
