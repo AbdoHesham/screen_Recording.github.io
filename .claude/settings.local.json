@@ -10,7 +10,13 @@
       "Bash(node test-db.js:*)",
       "Bash(npm run migrate:*)",
       "Bash(node verify-seed-data.js:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(npm start)",
+      "Bash(taskkill:*)",
+      "Bash(dir \"e:\\\\practice\\\\screen_Recording.github.io\\\\backend\\\\mock-storage\\\\recordings\"\" /s /b 2>nul || echo \"No recordings directory found \")",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(if exist \".next\\\\dev\\\\lock\" del \".next\\\\dev\\\\lock\")"
     ]
   }
 }
