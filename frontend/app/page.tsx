@@ -1,24 +1,72 @@
 'use client';
 
-import Link from 'next/link';
-import { FaVideo, FaMicrophone, FaRocket, FaStar, FaShieldAlt } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FaVideo, FaMicrophone, FaRocket, FaStar, FaShieldAlt, FaFilm } from 'react-icons/fa';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Home() {
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleGetStarted = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push('/record');
+  };
+
+  const handleStartRecording = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push('/record');
+  };
+
+  const handleOpenEditor = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push('/editor');
+  };
+
   return (
     <div className="min-h-screen">
       {/* Navbar */}
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-md z-50 shadow-sm">
+      <nav className="fixed top-0 w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-md z-50 shadow-sm dark:shadow-gray-800">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2 text-primary">
             <FaVideo className="text-2xl" />
             <span className="text-xl font-bold">ProScreen</span>
           </div>
           <div className="flex gap-6 items-center">
-            <a href="#features" className="hover:text-primary transition">Features</a>
-            <a href="#how-it-works" className="hover:text-primary transition">How It Works</a>
-            <Link href="/login" className="btn btn-primary text-sm px-4 py-2">
-              Get Started
-            </Link>
+            <a href="#features" className="hover:text-primary transition dark:text-gray-300">Features</a>
+            <a href="#how-it-works" className="hover:text-primary transition dark:text-gray-300">How It Works</a>
+            <button
+              onClick={handleOpenEditor}
+              className="hover:text-primary transition dark:text-gray-300"
+            >
+              Video Editor
+            </button>
+            <ThemeToggle />
+            {isLoggedIn ? (
+              <button
+                onClick={() => router.push('/dashboard')}
+                className="hover:text-primary transition dark:text-gray-300"
+              >
+                Dashboard
+              </button>
+            ) : (
+              <button
+                onClick={() => router.push('/login')}
+                className="hover:text-primary transition dark:text-gray-300"
+              >
+                Login
+              </button>
+            )}
+            <button onClick={handleGetStarted} className="btn btn-primary text-sm px-4 py-2">
+              Start Recording
+            </button>
           </div>
         </div>
       </nav>
@@ -56,49 +104,62 @@ export default function Home() {
                 <span>Free Forever</span>
               </div>
             </div>
-            <Link href="/register" className="btn bg-white text-primary hover:bg-gray-100 text-lg">
-              Start Recording Now
-            </Link>
+            <div className="flex flex-wrap gap-3">
+              <button onClick={handleStartRecording} className="btn bg-white text-primary hover:bg-gray-100 text-lg">
+              Start Recording Now - Free!
+              </button>
+              <button onClick={handleOpenEditor} className="btn bg-gray-900/20 text-white hover:bg-gray-900/30 text-lg border border-white/30">
+                Open Video Editor
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-6">
+      <section id="features" className="py-20 px-6 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16">Powerful Features</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <h2 className="text-4xl font-bold text-center mb-16 dark:text-gray-100">Powerful Features</h2>
+          <div className="grid md:grid-cols-4 gap-8">
             <div className="card hover:scale-105 transition">
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mb-4">
                 <FaVideo className="text-white text-xl" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Screen Recording</h3>
-              <p className="text-gray-600">Capture your entire screen or specific applications with high quality.</p>
+              <h3 className="text-xl font-bold mb-3 dark:text-gray-100">Screen Recording</h3>
+              <p className="text-gray-600 dark:text-gray-400">Capture your entire screen or specific applications with high quality.</p>
             </div>
 
             <div className="card hover:scale-105 transition">
               <div className="w-12 h-12 bg-gradient-to-br from-success to-info rounded-full flex items-center justify-center mb-4">
                 <FaMicrophone className="text-white text-xl" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Auto Transcription</h3>
-              <p className="text-gray-600">Automatic speech-to-text in 11+ languages with AI enhancement.</p>
+              <h3 className="text-xl font-bold mb-3 dark:text-gray-100">Auto Transcription</h3>
+              <p className="text-gray-600 dark:text-gray-400">Automatic speech-to-text in 11+ languages with AI enhancement.</p>
+            </div>
+
+            <div className="card hover:scale-105 transition">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mb-4">
+                <FaFilm className="text-white text-xl" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 dark:text-gray-100">Advanced Video Editor</h3>
+              <p className="text-gray-600 dark:text-gray-400">Trim, cut, and polish recordings with an easy editor. No login needed.</p>
             </div>
 
             <div className="card hover:scale-105 transition">
               <div className="w-12 h-12 bg-gradient-to-br from-warning to-danger rounded-full flex items-center justify-center mb-4">
                 <FaShieldAlt className="text-white text-xl" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Privacy First</h3>
-              <p className="text-gray-600">Your recordings stay private. Local storage with cloud backup.</p>
+              <h3 className="text-xl font-bold mb-3 dark:text-gray-100">Privacy First</h3>
+              <p className="text-gray-600 dark:text-gray-400">Your recordings stay private. Everything stored locally in your browser. No cloud, no signup needed!</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section id="how-it-works" className="py-20 px-6 bg-gray-100">
+      <section id="how-it-works" className="py-20 px-6 bg-gray-100 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16">How It Works</h2>
+          <h2 className="text-4xl font-bold text-center mb-16 dark:text-gray-100">How It Works</h2>
           <div className="grid md:grid-cols-4 gap-8">
             {[
               { num: '1', title: 'Choose Mode', desc: 'Select screen or voice recording' },
@@ -110,8 +171,8 @@ export default function Home() {
                 <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                   {step.num}
                 </div>
-                <h3 className="text-lg font-bold mb-2">{step.title}</h3>
-                <p className="text-gray-600">{step.desc}</p>
+                <h3 className="text-lg font-bold mb-2 dark:text-gray-100">{step.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400">{step.desc}</p>
               </div>
             ))}
           </div>

@@ -154,6 +154,23 @@ class APIClient {
   async getActivity(limit: number = 50) {
     return this.request(`/api/admin/activity?limit=${limit}`, {}, true);
   }
+
+  async getFeatures() {
+    return this.request('/api/admin/features', {}, true);
+  }
+
+  async updateFeature(id: string, data: {
+    enabled?: boolean;
+    requiresSubscription?: boolean;
+    requiredRole?: string;
+    displayName?: string;
+    description?: string;
+  }) {
+    return this.request(`/api/admin/features/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }, true);
+  }
 }
 
 export const apiClient = new APIClient();

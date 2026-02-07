@@ -85,8 +85,14 @@ function requireCredits(requiredCredits) {
   };
 }
 
+/**
+ * Convenience middleware to require admin role
+ */
+const requireAdmin = requireRole(['admin']);
+
 module.exports = {
   authenticateToken,
   requireRole,
-  requireCredits
+  requireCredits,
+  requireAdmin
 };

@@ -5,6 +5,11 @@ require('dotenv').config();
 const authRoutes = require('./routes/authRoutes');
 const recordingRoutes = require('./routes/recordingRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const adminFeaturesRoutes = require('./routes/adminFeaturesRoutes');
+const adminPlansRoutes = require('./routes/adminPlansRoutes');
+const landingPageRoutes = require('./routes/landingPageRoutes');
+const migrationRoutes = require('./routes/migrationRoutes');
+const mockStorageRoutes = require('./routes/mockStorageRoutes');
 const { pool } = require('./db/connection');
 
 // Initialize Express app
@@ -49,10 +54,17 @@ app.get('/health', async (req, res) => {
   }
 });
 
+// Mock storage routes (for development without AWS S3)
+app.use('/mock-storage', mockStorageRoutes);
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/recordings', recordingRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/admin/plan-features', adminFeaturesRoutes);
+app.use('/api/admin/plans', adminPlansRoutes);
+app.use('/api/migrations', migrationRoutes);
+app.use('/api', landingPageRoutes);
 
 // TODO: Add more routes as we build them
 // app.use('/api/payment', paymentRoutes);
@@ -118,3 +130,4 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+

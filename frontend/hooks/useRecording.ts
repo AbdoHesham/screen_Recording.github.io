@@ -9,6 +9,8 @@ export interface RecordingState {
   duration: number;
   blob: Blob | null;
   previewUrl: string | null;
+  transcription: string;
+  isTranscribing: boolean;
 }
 
 export function useRecording() {
@@ -18,12 +20,15 @@ export function useRecording() {
     duration: 0,
     blob: null,
     previewUrl: null,
+    transcription: '',
+    isTranscribing: false,
   });
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const recognitionRef = useRef<any>(null);
 
   // Start recording timer
   const startTimer = useCallback(() => {
@@ -37,6 +42,73 @@ export function useRecording() {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
+    }
+  }, []);
+
+  // Start speech recognition for transcription
+  const startTranscription = useCallback(() => {
+    if (typeof window === 'undefined') return;
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      console.log('Speech recognition not supported in this browser');
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => {
+        setState((prev) => ({ ...prev, isTranscribing: true }));
+      };
+
+      recognition.onresult = (event: any) => {
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript + ' ';
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+
+        setState((prev) => ({
+          ...prev,
+          transcription: prev.transcription + finalTranscript,
+        }));
+      };
+
+      recognition.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+      };
+
+      recognition.onend = () => {
+        setState((prev) => ({ ...prev, isTranscribing: false }));
+      };
+
+      recognition.start();
+      recognitionRef.current = recognition;
+    } catch (error) {
+      console.error('Failed to start transcription:', error);
+    }
+  }, []);
+
+  // Stop speech recognition
+  const stopTranscription = useCallback(() => {
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+        recognitionRef.current = null;
+      } catch (error) {
+        console.error('Failed to stop transcription:', error);
+      }
     }
   }, []);
 
@@ -88,7 +160,8 @@ export function useRecording() {
     mediaRecorderRef.current = recorder;
     streamRef.current = stream;
     startTimer();
-  }, [startTimer, stopTimer]);
+    startTranscription();
+  }, [startTimer, stopTimer, startTranscription]);
 
   // Start screen recording
   const startScreenRecording = useCallback(async (audioSource: AudioSource) => {
@@ -190,7 +263,8 @@ export function useRecording() {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
       mediaRecorderRef.current.stop();
     }
-  }, []);
+    stopTranscription();
+  }, [stopTranscription]);
 
   // Pause recording
   const pauseRecording = useCallback(() => {
@@ -198,8 +272,9 @@ export function useRecording() {
       mediaRecorderRef.current.pause();
       setState((prev) => ({ ...prev, isPaused: true }));
       stopTimer();
+      stopTranscription();
     }
-  }, [stopTimer]);
+  }, [stopTimer, stopTranscription]);
 
   // Resume recording
   const resumeRecording = useCallback(() => {
@@ -207,8 +282,9 @@ export function useRecording() {
       mediaRecorderRef.current.resume();
       setState((prev) => ({ ...prev, isPaused: false }));
       startTimer();
+      startTranscription();
     }
-  }, [startTimer]);
+  }, [startTimer, startTranscription]);
 
   // Reset recording state
   const resetRecording = useCallback(() => {
@@ -216,14 +292,17 @@ export function useRecording() {
       URL.revokeObjectURL(state.previewUrl);
     }
     chunksRef.current = [];
+    stopTranscription();
     setState({
       isRecording: false,
       isPaused: false,
       duration: 0,
       blob: null,
       previewUrl: null,
+      transcription: '',
+      isTranscribing: false,
     });
-  }, [state.previewUrl]);
+  }, [state.previewUrl, stopTranscription]);
 
   return {
     ...state,

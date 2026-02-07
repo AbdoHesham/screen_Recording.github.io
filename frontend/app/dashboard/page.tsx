@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaVideo, FaCoins, FaSignOutAlt, FaPlay, FaTrash, FaDownload, FaClock, FaFileAlt } from 'react-icons/fa';
 import { apiClient } from '@/lib/api-client';
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface User {
   id: string;
@@ -105,19 +106,19 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading dashboard...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2 text-primary">
             <FaVideo className="text-2xl" />
@@ -126,16 +127,19 @@ export default function DashboardPage() {
 
           <div className="flex items-center gap-6">
             {/* Credits Display */}
-            <div className="flex items-center gap-2 bg-yellow-50 px-4 py-2 rounded-lg border border-yellow-200">
-              <FaCoins className="text-yellow-600" />
-              <span className="font-semibold text-yellow-800">{credits} Credits</span>
+            <div className="flex items-center gap-2 bg-yellow-50 dark:bg-yellow-900/30 px-4 py-2 rounded-lg border border-yellow-200 dark:border-yellow-700">
+              <FaCoins className="text-yellow-600 dark:text-yellow-500" />
+              <span className="font-semibold text-yellow-800 dark:text-yellow-300">{credits} Credits</span>
             </div>
+
+            {/* Theme Toggle */}
+            <ThemeToggle />
 
             {/* User Menu */}
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">{user?.fullName}</p>
-                <p className="text-xs text-gray-500">{user?.email}</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{user?.fullName}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
               </div>
               <button
                 onClick={handleLogout}
@@ -153,10 +157,10 @@ export default function DashboardPage() {
       <main className="max-w-7xl mx-auto px-6 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {user?.fullName?.split(' ')[0]}! 👋
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            Welcome back, {user?.fullName?.split(' ')[0]}!
           </h1>
-          <p className="text-gray-600">Manage your recordings and start creating amazing content.</p>
+          <p className="text-gray-600 dark:text-gray-400">Manage your recordings and start creating amazing content.</p>
         </div>
 
         {/* Quick Actions */}
@@ -167,8 +171,8 @@ export default function DashboardPage() {
                 <FaVideo className="text-white text-xl" />
               </div>
               <div>
-                <h3 className="font-bold text-lg">New Recording</h3>
-                <p className="text-sm text-gray-600">Start recording now</p>
+                <h3 className="font-bold text-lg dark:text-gray-100">New Recording</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Start recording now</p>
               </div>
             </div>
           </Link>
@@ -179,8 +183,8 @@ export default function DashboardPage() {
                 <FaFileAlt className="text-white text-xl" />
               </div>
               <div>
-                <h3 className="font-bold text-lg">{recordings.length}</h3>
-                <p className="text-sm text-gray-600">Total Recordings</p>
+                <h3 className="font-bold text-lg dark:text-gray-100">{recordings.length}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Total Recordings</p>
               </div>
             </div>
           </div>
@@ -191,37 +195,37 @@ export default function DashboardPage() {
                 <FaCoins className="text-white text-xl" />
               </div>
               <div>
-                <h3 className="font-bold text-lg">Buy Credits</h3>
-                <p className="text-sm text-gray-600">Get more AI features</p>
+                <h3 className="font-bold text-lg dark:text-gray-100">Buy Credits</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Get more AI features</p>
               </div>
             </div>
           </Link>
         </div>
 
         {/* Recordings List */}
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-gray-900">Your Recordings</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Your Recordings</h2>
           </div>
 
           {recordings.length === 0 ? (
             <div className="px-6 py-12 text-center">
               <FaVideo className="text-gray-300 text-6xl mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No recordings yet</h3>
-              <p className="text-gray-600 mb-6">Start recording to see your content here</p>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No recordings yet</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">Start recording to see your content here</p>
               <Link href="/record" className="btn btn-primary inline-flex">
                 <FaVideo />
                 Start Recording
               </Link>
             </div>
           ) : (
-            <div className="divide-y divide-gray-200">
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
               {recordings.map((recording) => (
-                <div key={recording.id} className="px-6 py-4 hover:bg-gray-50 transition">
+                <div key={recording.id} className="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/60 transition">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 mb-1">{recording.title}</h3>
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                      <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{recording.title}</h3>
+                      <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
                         <span className="flex items-center gap-1">
                           <FaClock />
                           {formatDuration(recording.durationSeconds)}
@@ -268,3 +272,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+

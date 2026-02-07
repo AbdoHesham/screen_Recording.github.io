@@ -1,3 +1,5 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -6,6 +8,21 @@ const nextConfig = {
   },
   images: {
     domains: ['proscreen-recordings.s3.amazonaws.com', 's3.amazonaws.com'],
+  },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      '@ffmpeg/ffmpeg': path.join(
+        __dirname,
+        'node_modules',
+        '@ffmpeg',
+        'ffmpeg',
+        'dist',
+        'umd',
+        'ffmpeg.js'
+      ),
+    };
+    return config;
   },
 };
 

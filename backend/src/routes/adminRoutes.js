@@ -499,4 +499,117 @@ router.get('/activity', authenticateToken, requireRole(['admin']), async (req, r
   }
 });
 
+/**
+ * GET /api/admin/features
+ * Get all feature flags
+ */
+router.get('/features', authenticateToken, requireRole(['admin']), async (req, res) => {
+  try {
+    const result = await query(
+      `SELECT
+        id, feature_name, display_name, description,
+        enabled, requires_subscription, required_role,
+        created_at, updated_at
+       FROM feature_flags
+       ORDER BY feature_name`
+    );
+
+    res.json({
+      features: result.rows.map(f => ({
+        id: f.id,
+        featureName: f.feature_name,
+        displayName: f.display_name,
+        description: f.description,
+        enabled: f.enabled,
+        requiresSubscription: f.requires_subscription,
+        requiredRole: f.required_role,
+        createdAt: f.created_at,
+        updatedAt: f.updated_at
+      }))
+    });
+  } catch (error) {
+    console.error('Error fetching features:', error);
+    res.status(500).json({ error: 'Failed to fetch feature flags' });
+  }
+});
+
+/**
+ * PATCH /api/admin/features/:id
+ * Update feature flag
+ */
+router.patch('/features/:id', authenticateToken, requireRole(['admin']), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { enabled, requiresSubscription, requiredRole, displayName, description } = req.body;
+
+    const updates = [];
+    const values = [];
+    let paramCount = 1;
+
+    if (enabled !== undefined) {
+      updates.push(`enabled = $${paramCount++}`);
+      values.push(enabled);
+    }
+
+    if (requiresSubscription !== undefined) {
+      updates.push(`requires_subscription = $${paramCount++}`);
+      values.push(requiresSubscription);
+    }
+
+    if (requiredRole !== undefined) {
+      updates.push(`required_role = $${paramCount++}`);
+      values.push(requiredRole);
+    }
+
+    if (displayName !== undefined) {
+      updates.push(`display_name = $${paramCount++}`);
+      values.push(displayName);
+    }
+
+    if (description !== undefined) {
+      updates.push(`description = $${paramCount++}`);
+      values.push(description);
+    }
+
+    if (updates.length === 0) {
+      return res.status(400).json({ error: 'No fields to update' });
+    }
+
+    values.push(id);
+
+    const result = await query(
+      `UPDATE feature_flags
+       SET ${updates.join(', ')}, updated_at = CURRENT_TIMESTAMP
+       WHERE id = $${paramCount}
+       RETURNING id, feature_name, display_name, description,
+                 enabled, requires_subscription, required_role,
+                 updated_at`,
+      values
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Feature flag not found' });
+    }
+
+    const feature = result.rows[0];
+
+    res.json({
+      message: 'Feature flag updated successfully',
+      feature: {
+        id: feature.id,
+        featureName: feature.feature_name,
+        displayName: feature.display_name,
+        description: feature.description,
+        enabled: feature.enabled,
+        requiresSubscription: feature.requires_subscription,
+        requiredRole: feature.required_role,
+        updatedAt: feature.updated_at
+      }
+    });
+  } catch (error) {
+    console.error('Error updating feature flag:', error);
+    res.status(500).json({ error: 'Failed to update feature flag' });
+  }
+});
+
 module.exports = router;
