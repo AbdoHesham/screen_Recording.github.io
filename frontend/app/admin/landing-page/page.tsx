@@ -218,15 +218,20 @@ export default function AdminLandingPagePage() {
   };
 
   const handleOpenModal = (content?: LandingPageContent) => {
+    console.log('handleOpenModal called with:', content);
     if (content) {
+      console.log('Opening edit modal for:', content.section_key);
       setEditingContent(content);
-      setFormData({
+      const newFormData = {
         section_key: content.section_key,
         content_type: content.content_type,
         content_value: content.content_value,
         is_active: content.is_active,
-      });
+      };
+      console.log('Setting form data to:', newFormData);
+      setFormData(newFormData);
     } else {
+      console.log('Opening create modal');
       setEditingContent(null);
       setFormData({
         section_key: '',
@@ -252,8 +257,15 @@ export default function AdminLandingPagePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log('Form submitted with data:', formData);
+    console.log('Editing content:', editingContent);
+
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
       const url = editingContent
         ? `http://localhost:3001/api/admin/landing-page/${editingContent.id}`
         : 'http://localhost:3001/api/admin/landing-page';
@@ -262,6 +274,8 @@ export default function AdminLandingPagePage() {
       const bodyData = editingContent
         ? { content_value: formData.content_value, is_active: formData.is_active }
         : formData;
+
+      console.log('Sending request:', { method, url, bodyData });
 
       const response = await fetch(url, {
         method,
@@ -272,17 +286,23 @@ export default function AdminLandingPagePage() {
         body: JSON.stringify(bodyData),
       });
 
+      console.log('Response status:', response.status);
+
       if (!response.ok) {
         const error = await response.json();
+        console.error('Server error:', error);
         throw new Error(error.error || 'Failed to save content');
       }
+
+      const result = await response.json();
+      console.log('Success result:', result);
 
       showNotification(
         editingContent ? 'Content updated successfully' : 'Content created successfully',
         'success'
       );
       handleCloseModal();
-      fetchContents();
+      await fetchContents();
     } catch (error: any) {
       console.error('Error saving content:', error);
       showNotification(error.message || 'Failed to save content', 'error');
@@ -532,7 +552,11 @@ export default function AdminLandingPagePage() {
                     <input
                       type="text"
                       value={formData.section_key}
-                      onChange={(e) => setFormData({ ...formData, section_key: e.target.value })}
+                      onChange={(e) => {
+                        const newValue = e.target.value;
+                        console.log('section_key changed to:', newValue);
+                        setFormData(prev => ({ ...prev, section_key: newValue }));
+                      }}
                       disabled={!!editingContent}
                       className="input"
                       placeholder="e.g., hero_title, logo_url, feature_1_image"
@@ -549,7 +573,11 @@ export default function AdminLandingPagePage() {
                     </label>
                     <select
                       value={formData.content_type}
-                      onChange={(e) => setFormData({ ...formData, content_type: e.target.value })}
+                      onChange={(e) => {
+                        const newValue = e.target.value;
+                        console.log('content_type changed to:', newValue);
+                        setFormData(prev => ({ ...prev, content_type: newValue }));
+                      }}
                       disabled={!!editingContent}
                       className="input"
                     >
@@ -569,7 +597,11 @@ export default function AdminLandingPagePage() {
                       <input
                         type="url"
                         value={formData.content_value}
-                        onChange={(e) => setFormData({ ...formData, content_value: e.target.value })}
+                        onChange={(e) => {
+                          const newValue = e.target.value;
+                          console.log('Image URL changed to:', newValue);
+                          setFormData(prev => ({ ...prev, content_value: newValue }));
+                        }}
                         className="input"
                         placeholder="https://example.com/image.png"
                         required
@@ -594,7 +626,11 @@ export default function AdminLandingPagePage() {
                       </label>
                       <textarea
                         value={formData.content_value}
-                        onChange={(e) => setFormData({ ...formData, content_value: e.target.value })}
+                        onChange={(e) => {
+                          const newValue = e.target.value;
+                          console.log('Textarea changed to:', newValue);
+                          setFormData(prev => ({ ...prev, content_value: newValue }));
+                        }}
                         className="input font-mono text-sm"
                         placeholder={
                           isHtmlType
@@ -622,7 +658,11 @@ export default function AdminLandingPagePage() {
                       type="checkbox"
                       id="is_active"
                       checked={formData.is_active}
-                      onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+                      onChange={(e) => {
+                        const newValue = e.target.checked;
+                        console.log('is_active changed to:', newValue);
+                        setFormData(prev => ({ ...prev, is_active: newValue }));
+                      }}
                       className="h-5 w-5 text-primary focus:ring-primary border-gray-300 dark:border-gray-600 rounded cursor-pointer"
                     />
                     <label htmlFor="is_active" className="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">

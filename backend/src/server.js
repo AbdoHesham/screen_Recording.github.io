@@ -10,6 +10,7 @@ const adminPlansRoutes = require('./routes/adminPlansRoutes');
 const landingPageRoutes = require('./routes/landingPageRoutes');
 const migrationRoutes = require('./routes/migrationRoutes');
 const mockStorageRoutes = require('./routes/mockStorageRoutes');
+const videoEditorRoutes = require('./routes/videoEditorRoutes');
 const { pool } = require('./db/connection');
 
 // Initialize Express app
@@ -46,9 +47,11 @@ app.get('/health', async (req, res) => {
       environment: process.env.NODE_ENV || 'development'
     });
   } catch (error) {
+    console.error('Health check database error:', error);
     res.status(503).json({
       status: 'unhealthy',
       error: 'Database connection failed',
+      details: error.message,
       timestamp: new Date().toISOString()
     });
   }
@@ -64,6 +67,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/admin/plan-features', adminFeaturesRoutes);
 app.use('/api/admin/plans', adminPlansRoutes);
 app.use('/api/migrations', migrationRoutes);
+app.use('/api/video-editor', videoEditorRoutes);
 app.use('/api', landingPageRoutes);
 
 // TODO: Add more routes as we build them

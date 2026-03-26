@@ -72,7 +72,7 @@ export default function PlansManagementPage() {
 
   const loadFeatures = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/admin/plan-features', {
+      const response = await fetch('http://localhost:3001/api/admin/features', {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
       });
       if (response.ok) {

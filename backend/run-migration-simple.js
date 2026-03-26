@@ -26,7 +26,8 @@ async function runMigration() {
     const migrationNumber = process.argv[2] || '006';
     const migrationFiles = {
       '006': '006_features_and_plans.sql',
-      '007': '007_add_sort_order.sql'
+      '007': '007_add_sort_order.sql',
+      '008': '008_access_control_and_audit.sql'
     };
 
     const migrationFile = migrationFiles[migrationNumber];
@@ -52,7 +53,8 @@ async function runMigration() {
       SELECT table_name
       FROM information_schema.tables
       WHERE table_schema = 'public'
-      AND table_name IN ('features', 'plans', 'plan_features', 'landing_page_content')
+      AND table_name IN ('features', 'plans', 'plan_features', 'landing_page_content',
+                          'user_plan_history', 'feature_usage', 'video_jobs', 'feature_audit_log')
       ORDER BY table_name
     `);
 

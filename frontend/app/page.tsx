@@ -5,15 +5,44 @@ import { useRouter } from 'next/navigation';
 import { FaVideo, FaMicrophone, FaRocket, FaStar, FaShieldAlt, FaFilm } from 'react-icons/fa';
 import ThemeToggle from '@/components/ThemeToggle';
 
+interface LandingPageContent {
+  [key: string]: {
+    type: string;
+    value: string;
+  };
+}
+
 export default function Home() {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [content, setContent] = useState<LandingPageContent>({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Check if user is logged in
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
+
+    // Fetch landing page content
+    fetchContent();
   }, []);
+
+  const fetchContent = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/landing-page/content');
+      const data = await response.json();
+      console.log('Fetched landing page content:', data);
+      setContent(data.content || {});
+    } catch (error) {
+      console.error('Error fetching landing page content:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getContent = (key: string, defaultValue: string = '') => {
+    return content[key]?.value || defaultValue;
+  };
 
   const handleGetStarted = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -30,6 +59,17 @@ export default function Home() {
     router.push('/editor');
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen">
       {/* Navbar */}
@@ -37,7 +77,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2 text-primary">
             <FaVideo className="text-2xl" />
-            <span className="text-xl font-bold">ProScreen</span>
+            <span className="text-xl font-bold">
+              {getContent('app_name', 'ProScreen')}
+            </span>
           </div>
           <div className="flex gap-6 items-center">
             <a href="#features" className="hover:text-primary transition dark:text-gray-300">Features</a>
@@ -82,34 +124,34 @@ export default function Home() {
           <div className="max-w-3xl">
             <h1 className="text-6xl font-bold mb-6">
               <span className="bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
-                Professional
+                {getContent('hero_title', 'Professional')}
               </span>
               <br />
-              Screen Recording
+              {getContent('hero_subtitle', 'Screen Recording')}
             </h1>
             <p className="text-xl mb-8 text-gray-100">
-              Capture your screen and voice with crystal-clear quality. Perfect for tutorials, presentations, and content creation.
+              {getContent('hero_description', 'Capture your screen and voice with crystal-clear quality. Perfect for tutorials, presentations, and content creation.')}
             </p>
             <div className="flex gap-4 mb-8">
               <div className="flex items-center gap-2">
                 <FaStar className="text-yellow-400" />
-                <span>10K+ Users</span>
+                <span>{getContent('hero_stat_1', '10K+ Users')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <FaStar className="text-yellow-400" />
-                <span>4.9/5 Rating</span>
+                <span>{getContent('hero_stat_2', '4.9/5 Rating')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <FaRocket className="text-green-400" />
-                <span>Free Forever</span>
+                <span>{getContent('hero_stat_3', 'Free Forever')}</span>
               </div>
             </div>
             <div className="flex flex-wrap gap-3">
               <button onClick={handleStartRecording} className="btn bg-white text-primary hover:bg-gray-100 text-lg">
-              Start Recording Now - Free!
+                {getContent('hero_cta_primary', 'Start Recording Now - Free!')}
               </button>
               <button onClick={handleOpenEditor} className="btn bg-gray-900/20 text-white hover:bg-gray-900/30 text-lg border border-white/30">
-                Open Video Editor
+                {getContent('hero_cta_secondary', 'Open Video Editor')}
               </button>
             </div>
           </div>
@@ -119,38 +161,56 @@ export default function Home() {
       {/* Features Section */}
       <section id="features" className="py-20 px-6 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16 dark:text-gray-100">Powerful Features</h2>
+          <h2 className="text-4xl font-bold text-center mb-16 dark:text-gray-100">
+            {getContent('features_title', 'Powerful Features')}
+          </h2>
           <div className="grid md:grid-cols-4 gap-8">
             <div className="card hover:scale-105 transition">
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mb-4">
                 <FaVideo className="text-white text-xl" />
               </div>
-              <h3 className="text-xl font-bold mb-3 dark:text-gray-100">Screen Recording</h3>
-              <p className="text-gray-600 dark:text-gray-400">Capture your entire screen or specific applications with high quality.</p>
+              <h3 className="text-xl font-bold mb-3 dark:text-gray-100">
+                {getContent('feature_1_title', 'Screen Recording')}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                {getContent('feature_1_description', 'Capture your entire screen or specific applications with high quality.')}
+              </p>
             </div>
 
             <div className="card hover:scale-105 transition">
               <div className="w-12 h-12 bg-gradient-to-br from-success to-info rounded-full flex items-center justify-center mb-4">
                 <FaMicrophone className="text-white text-xl" />
               </div>
-              <h3 className="text-xl font-bold mb-3 dark:text-gray-100">Auto Transcription</h3>
-              <p className="text-gray-600 dark:text-gray-400">Automatic speech-to-text in 11+ languages with AI enhancement.</p>
+              <h3 className="text-xl font-bold mb-3 dark:text-gray-100">
+                {getContent('feature_2_title', 'Auto Transcription')}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                {getContent('feature_2_description', 'Automatic speech-to-text in 11+ languages with AI enhancement.')}
+              </p>
             </div>
 
             <div className="card hover:scale-105 transition">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mb-4">
                 <FaFilm className="text-white text-xl" />
               </div>
-              <h3 className="text-xl font-bold mb-3 dark:text-gray-100">Advanced Video Editor</h3>
-              <p className="text-gray-600 dark:text-gray-400">Trim, cut, and polish recordings with an easy editor. No login needed.</p>
+              <h3 className="text-xl font-bold mb-3 dark:text-gray-100">
+                {getContent('feature_3_title', 'Advanced Video Editor')}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                {getContent('feature_3_description', 'Trim, cut, and polish recordings with an easy editor. No login needed.')}
+              </p>
             </div>
 
             <div className="card hover:scale-105 transition">
               <div className="w-12 h-12 bg-gradient-to-br from-warning to-danger rounded-full flex items-center justify-center mb-4">
                 <FaShieldAlt className="text-white text-xl" />
               </div>
-              <h3 className="text-xl font-bold mb-3 dark:text-gray-100">Privacy First</h3>
-              <p className="text-gray-600 dark:text-gray-400">Your recordings stay private. Everything stored locally in your browser. No cloud, no signup needed!</p>
+              <h3 className="text-xl font-bold mb-3 dark:text-gray-100">
+                {getContent('feature_4_title', 'Privacy First')}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                {getContent('feature_4_description', 'Your recordings stay private. Everything stored locally in your browser. No cloud, no signup needed!')}
+              </p>
             </div>
           </div>
         </div>
@@ -159,13 +219,31 @@ export default function Home() {
       {/* How It Works */}
       <section id="how-it-works" className="py-20 px-6 bg-gray-100 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16 dark:text-gray-100">How It Works</h2>
+          <h2 className="text-4xl font-bold text-center mb-16 dark:text-gray-100">
+            {getContent('how_it_works_title', 'How It Works')}
+          </h2>
           <div className="grid md:grid-cols-4 gap-8">
             {[
-              { num: '1', title: 'Choose Mode', desc: 'Select screen or voice recording' },
-              { num: '2', title: 'Start Recording', desc: 'Click record and begin capturing' },
-              { num: '3', title: 'Edit with AI', desc: 'Use AI to enhance and cleanup' },
-              { num: '4', title: 'Export & Share', desc: 'Download or share your recording' },
+              {
+                num: '1',
+                title: getContent('step_1_title', 'Choose Mode'),
+                desc: getContent('step_1_description', 'Select screen or voice recording')
+              },
+              {
+                num: '2',
+                title: getContent('step_2_title', 'Start Recording'),
+                desc: getContent('step_2_description', 'Click record and begin capturing')
+              },
+              {
+                num: '3',
+                title: getContent('step_3_title', 'Edit with AI'),
+                desc: getContent('step_3_description', 'Use AI to enhance and cleanup')
+              },
+              {
+                num: '4',
+                title: getContent('step_4_title', 'Export & Share'),
+                desc: getContent('step_4_description', 'Download or share your recording')
+              },
             ].map((step) => (
               <div key={step.num} className="text-center">
                 <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
@@ -184,10 +262,16 @@ export default function Home() {
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <FaVideo className="text-2xl text-primary" />
-            <span className="text-xl font-bold">ProScreen</span>
+            <span className="text-xl font-bold">
+              {getContent('app_name', 'ProScreen')}
+            </span>
           </div>
-          <p className="text-gray-400">Professional Screen & Voice Recording</p>
-          <p className="text-gray-500 text-sm mt-4">&copy; 2026 ProScreen Recorder. All rights reserved.</p>
+          <p className="text-gray-400">
+            {getContent('footer_tagline', 'Professional Screen & Voice Recording')}
+          </p>
+          <p className="text-gray-500 text-sm mt-4">
+            {getContent('footer_copyright', '© 2026 ProScreen Recorder. All rights reserved.')}
+          </p>
         </div>
       </footer>
     </div>

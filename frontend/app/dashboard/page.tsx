@@ -3,9 +3,31 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { FaVideo, FaCoins, FaSignOutAlt, FaPlay, FaTrash, FaDownload, FaClock, FaFileAlt } from 'react-icons/fa';
+import { FaVideo, FaCoins, FaSignOutAlt, FaPlay, FaTrash, FaDownload, FaClock, FaFileAlt, FaFilm, FaEdit } from 'react-icons/fa';
 import { apiClient } from '@/lib/api-client';
 import ThemeToggle from '@/components/ThemeToggle';
+
+interface SavedEdit {
+  id: string;
+  name: string;
+  savedAt: string;
+  duration: number;
+  aspectRatio: string;
+  tracks: unknown[];
+}
+
+const LS_KEY = 'proscreen_saved_edits';
+
+function getSavedEdits(): SavedEdit[] {
+  if (typeof window === 'undefined') return [];
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); }
+  catch { return []; }
+}
+
+function deleteSavedEdit(id: string) {
+  const all = getSavedEdits().filter(p => p.id !== id);
+  localStorage.setItem(LS_KEY, JSON.stringify(all));
+}
 
 interface User {
   id: string;
@@ -32,9 +54,11 @@ export default function DashboardPage() {
   const [recordings, setRecordings] = useState<Recording[]>([]);
   const [credits, setCredits] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [savedEdits, setSavedEdits] = useState<SavedEdit[]>([]);
 
   useEffect(() => {
     loadDashboard();
+    setSavedEdits(getSavedEdits());
   }, []);
 
   const loadDashboard = async () => {
@@ -164,7 +188,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid md:grid-cols-4 gap-6 mb-8">
           <Link href="/record" className="card hover:scale-105 transition cursor-pointer group">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center group-hover:scale-110 transition">
@@ -173,6 +197,18 @@ export default function DashboardPage() {
               <div>
                 <h3 className="font-bold text-lg dark:text-gray-100">New Recording</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Start recording now</p>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/video-editor" className="card hover:scale-105 transition cursor-pointer group">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center group-hover:scale-110 transition">
+                <FaFilm className="text-white text-xl" />
+              </div>
+              <div>
+                <h3 className="font-bold text-lg dark:text-gray-100">Video Editor</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Edit & export videos</p>
               </div>
             </div>
           </Link>
@@ -262,6 +298,74 @@ export default function DashboardPage() {
                         <FaTrash />
                       </button>
                     </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Saved Video Edits */}
+        <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Saved Edits</h2>
+            <Link href="/video-editor"
+              className="flex items-center gap-2 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors">
+              <FaFilm className="text-base" />
+              Open Editor
+            </Link>
+          </div>
+
+          {savedEdits.length === 0 ? (
+            <div className="px-6 py-10 text-center">
+              <FaEdit className="text-gray-300 text-5xl mx-auto mb-3" />
+              <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-1">No saved edits yet</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                Open the video editor and press <kbd className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-xs font-mono">Ctrl+S</kbd> or click&nbsp;
+                <strong>Save Draft</strong> to save your work here.
+              </p>
+              <Link href="/video-editor" className="btn btn-primary inline-flex text-sm">
+                <FaFilm />
+                Open Video Editor
+              </Link>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+              {savedEdits.map((edit) => (
+                <div key={edit.id} className="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/40 rounded-xl flex items-center justify-center shrink-0">
+                      <FaFilm className="text-indigo-600 dark:text-indigo-400" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-gray-900 dark:text-gray-100 truncate">{edit.name}</p>
+                      <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                        <span>{edit.aspectRatio}</span>
+                        <span>{edit.duration}s</span>
+                        <span>{edit.tracks?.length ?? 0} tracks</span>
+                        <span className="flex items-center gap-1">
+                          <FaClock className="text-[10px]" />
+                          {new Date(edit.savedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Link href={`/video-editor?project=${edit.id}`}
+                      className="btn bg-indigo-100 text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-900/40 dark:text-indigo-300 dark:hover:bg-indigo-900/70 text-sm px-3 py-2 flex items-center gap-1.5">
+                      <FaEdit className="text-xs" />
+                      Open
+                    </Link>
+                    <button
+                      onClick={() => {
+                        if (!confirm(`Delete "${edit.name}"?`)) return;
+                        deleteSavedEdit(edit.id);
+                        setSavedEdits(getSavedEdits());
+                      }}
+                      className="btn bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 text-sm px-3 py-2"
+                      title="Delete draft">
+                      <FaTrash className="text-xs" />
+                    </button>
                   </div>
                 </div>
               ))}

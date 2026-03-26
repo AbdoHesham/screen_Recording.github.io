@@ -155,4 +155,24 @@ router.get('/credits', authenticateToken, async (req, res) => {
   }
 });
 
+/**
+ * GET /api/auth/features
+ * Get features available to the authenticated user based on their plan
+ */
+router.get('/features', authenticateToken, async (req, res) => {
+  try {
+    const featuresService = require('../services/featuresService');
+    const features = await featuresService.getUserFeatures(req.user.userId);
+
+    res.json({
+      features
+    });
+  } catch (error) {
+    console.error('Get user features error:', error);
+    res.status(500).json({
+      error: 'Failed to fetch user features'
+    });
+  }
+});
+
 module.exports = router;

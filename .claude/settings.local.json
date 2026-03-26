@@ -16,7 +16,10 @@
       "Bash(dir \"e:\\\\practice\\\\screen_Recording.github.io\\\\backend\\\\mock-storage\\\\recordings\"\" /s /b 2>nul || echo \"No recordings directory found \")",
       "Bash(netstat:*)",
       "Bash(findstr:*)",
-      "Bash(if exist \".next\\\\dev\\\\lock\" del \".next\\\\dev\\\\lock\")"
+      "Bash(if exist \".next\\\\dev\\\\lock\" del \".next\\\\dev\\\\lock\")",
+      "WebFetch(domain:img.ly)",
+      "WebSearch",
+      "Bash(npx tsc:*)"
     ]
   }
 }
